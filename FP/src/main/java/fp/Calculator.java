@@ -91,143 +91,65 @@ public class Calculator {
 	 * Toma como parámetros una cadena de caracteres y devuelve cierto si la cadena resulta ser un palíndromo
 	 */
 	public static boolean checkIsPalindrome(String cadena) {
-		if (cadena == null) {
+		if (cadena == null)
 			return false;
-		} else {
-			removeAccent(cadena);
-			eliminarEspacios(cadena);
-			eliminarCaracteresEspecialesYConvertirAMinusculas(cadena);
+		else {
+			String sinCaracteresEnMinusculas = quitarCaracteresEspecialesYponerAMinusculas(cadena);
+			
+			Boolean palindromo = comprobarPalindromo(sinCaracteresEnMinusculas);
 
-			return comprobacionPalindromo(cadena);
+			return palindromo;
+
 		}
-
-
 	}
 
-	public static void eliminarEspacios(String cadena1) {
-		cadena1 = cadena1.replace(" ", "");
-	}
-
-	public static void eliminarCaracteresEspecialesYConvertirAMinusculas(String cadena1) {
-		// eliminamos de la cadena los caracteres especiales
-		cadena1 = cadena1.replaceAll("[^\\p{ASCII}]", "");
-		cadena1 = cadena1.replaceAll(",", "");
-		cadena1 = cadena1.replaceAll(".", "");
-		/*
-		 * cadena1 = cadena1.replaceAll("?", ""); cadena1 = cadena1.replaceAll("¿", "");
-		 * cadena1 = cadena1.replaceAll(":", ""); cadena1 = cadena1.replaceAll("á",
-		 * "a"); cadena1 = cadena1.replaceAll("é", "e"); cadena1 =
-		 * cadena1.replaceAll("è", "e"); cadena1 = cadena1.replaceAll("·", ""); cadena1
-		 * = cadena1.replaceAll("í", "i"); cadena1 = cadena1.replaceAll("ó", "o");
-		 * cadena1 = cadena1.replaceAll("ú", "u");
-		 */
-
-		// convertimos todos los caracteres de la cadena a minusculas
-		cadena1 = cadena1.toLowerCase();
-	}
-
-	public static boolean comprobacionPalindromo(String cadena1) {
-		int posicionMasBaja = 0;
-		int posicionMasAlta = cadena1.length() - 1;
-		boolean esPalindromo = true;
-
-		while ((posicionMasAlta > posicionMasBaja) && esPalindromo) {
-			if (cadena1.charAt(posicionMasBaja) != cadena1.charAt(posicionMasAlta)) {
-				esPalindromo = false;
-			}
-			posicionMasBaja++;
-			posicionMasAlta--;
+	public static String quitarCaracteresEspecialesYponerAMinusculas(String cadena) {
+		String caracteresEspeciales = "áàäéèëíìïóòöúùuñÁÀÄÉÈËÍÌÏÓÒÖÚÙÜÑçÇ:;-_,.?¿¡!·";
+		String normales = "aaaeeeiiiooouuunAAAEEEIIIOOOUUUNcC           ";
+		String cadenaMinusculas = cadena.toLowerCase();
+		for (int i = 0; i < caracteresEspeciales.length(); i++) {
+			cadenaMinusculas = cadenaMinusculas.replace(caracteresEspeciales.charAt(i), normales.charAt(i));
 		}
-		return esPalindromo;
+		return cadenaMinusculas;
 	}
 
-	public static boolean compararString(String cadena) {
-		String girado = null;
-		boolean iguales = true;
-		for (int i = cadena.length()-1; i >0; i++) {
-			girado.concat(cadena.substring(i - 1, i));
-		}
-		for (int i = 0; i < girado.length(); i++) {
-			if (girado.charAt(i) != cadena.charAt(i)) {
-				iguales = false;
-			}
-		}
-		return iguales;
+	public static Boolean comprobarPalindromo(String sinCaracteresEnMinusculas) {
+		String invertida = "";
+		sinCaracteresEnMinusculas = sinCaracteresEnMinusculas.replace(" ", "");
+		for (int i = sinCaracteresEnMinusculas.length() - 1; i >= 0; i--)
+			invertida += sinCaracteresEnMinusculas.charAt(i);
+		if (sinCaracteresEnMinusculas.equals(invertida))
+			return true;
+		else
+			return false;
 	}
 
-	private static String removeAccent(String texto) {
-		String original = "ÁÉÍÓÚÝáéíóúý";
-		String ascii = "ACEIOUYaeiouy";
-	    String output = texto;
-		for (int i = 0; i < texto.length(); i++) {
-			for (int j = 0; j < original.length(); j++) {
-				if (texto.charAt(i) == original.charAt(j)) {
-					output = output.replace(original.charAt(j), ascii.charAt(j));
-				}
-			}
-
-	    }
-		return output;
-	}
 	/*
 	 * Pedir un número de 0 a 99 y mostrarlo escrito. Por ejemplo, para 56
 	 * mostrar: cincuenta y seis
 	 */
 	public static String speakToMe(int n) {
-		return "";
+		String numero = "";
+		String cero = "Cero";
+		String unidades[] = { "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve" };
+		String decenas[] = { "Diez", "Veinte", "Treinta", "Cuarenta", "Cincuenta", "Sesenta", "Setenta", "Ochenta",
+				"Noventa" };
+		if (n == 0) {
+			numero += cero;
+		} else if (n < 10) {
+			numero += unidades[n - 1];
+		} else if (n % 10 == 0) {
+			numero += decenas[(n / 10) - 1];
+		} else {
+			int unidad = n % 10;
+			int decena = n / 10;
+			numero = decenas[decena - 1] + " y " + unidades[unidad - 1];
+		}
+		return numero;
 		
 	}
 
-	public static void leerNumeroMayorDe10(int numero) {
-		String numeroLeido = null;
-		if (numero % 10 != 0) {
-			switch (numero) {
-			case 1:
-				numeroLeido = "uno";
-			case 2:
-				numeroLeido = "dos";
-			case 3:
-				numeroLeido = "tres";
-			case 4:
-				numeroLeido = "cuatro";
-			case 5:
-				numeroLeido = "cinco";
-			case 6:
-				numeroLeido = "seis";
-			case 7:
-				numeroLeido = "siete";
-			case 8:
-				numeroLeido = "ocho";
-			case 9:
-				numeroLeido = "nueve";
-			}
-			numero = numero / 10;
-		} else {
-			numeroLeido = "cero";
-		}
-		if (numero % 10 != 0) {
-			switch (numero) {
-			case 1:
-				numeroLeido = "dieci" + numeroLeido.substring(0);
-			case 2:
-				numeroLeido = "";
-			case 3:
-				numeroLeido = "tres";
-			case 4:
-				numeroLeido = "cuatro";
-			case 5:
-				numeroLeido = "cinco";
-			case 6:
-				numeroLeido = "seis";
-			case 7:
-				numeroLeido = "siete";
-			case 8:
-				numeroLeido = "ocho";
-			case 9:
-				numeroLeido = "nueve";
-			}
-		}
-	}
+
 	/*
 	 * este metodo devuelve cierto si el año de la fecha es bisiesto fecha
 	 * dd-MM-yyyy
